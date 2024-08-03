@@ -53,7 +53,7 @@ module.exports = {
                     title: videoInfo.videoDetails.title,
                 };
                 interaction.client.queue.enqueue(song);
-                await interaction.reply(`\`${song.title}\` (${song.url}) adicionado a fila!`);
+                await interaction.reply(`\`${song.title}\` adicionado a fila!`);
             }
             else {
                 const result = await ytsr(link, { limit: 1 });
@@ -65,7 +65,7 @@ module.exports = {
                     title: result.items[0].name,
                 };
                 interaction.client.queue.enqueue(song);
-                await interaction.reply(`\`${song.title}\` (${song.url}) adicionado a fila!`);
+                await interaction.reply(`\`${song.title}\` adicionado a fila!`);
             }
         } catch (error) {
             console.error(error);
@@ -113,7 +113,7 @@ async function player(client, channel) {
 
     try {
         client.connection.subscribe(audioPlayer);
-        const stream = await ytdl(nextSong.url, { agent: agent, highWaterMark: 1 << 62, liveBuffer: 1 << 62 });
+        const stream = await ytdl(nextSong.url, { agent: agent });
         
         const resource = createAudioResource(stream, { inputType: StreamType.Opus});
 
@@ -128,6 +128,7 @@ async function player(client, channel) {
         });
 
         audioPlayer.play(resource);
+        client.currentSong = nextSong;
         channel.send(`Tocando: ${nextSong.title} (${nextSong.url})`);
     }
     catch (error) {

@@ -11,6 +11,7 @@ client.queue = new Queue();
 client.isPlaying = false;
 client.connection = null;
 client.timeoutId = null;
+client.currentSong = null;
 
 // Registro de comandos
 client.commands = new Collection();
