@@ -1,0 +1,42 @@
+{
+  "name": "testabot-ultimate",
+  "version": "1.0.0",
+  "description": "Upgrade ao bot mais amado da piazada",
+  "main": "bot.js",
+  "scripts": {
+    "test": "node ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gabee12/TestaBOT-Ultimate.git"
+  },
+  "keywords": [
+    "bot",
+    "discord",
+    "voice",
+    "music"
+  ],
+  "author": "Gabriel Echeverria",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/gabee12/TestaBOT-Ultimate/issues"
+  },
+  "homepage": "https://github.com/gabee12/TestaBOT-Ultimate#readme",
+  "dependencies": {
+    "@discordjs/opus": "^0.9.0",
+    "@discordjs/voice": "^0.17.0",
+    "@distube/ytdl-core": "^4.13.7",
+    "@distube/ytpl": "^1.2.1",
+    "@distube/ytsr": "^2.0.4",
+    "bufferutil": "^4.0.8",
+    "discord.js": "^14.15.3",
+    "hot-esm": "^1.6.0",
+    "sodium-native": "^4.1.1",
+    "utf-8-validate": "^6.0.4",
+    "ytdl-core-discord": "^1.3.1",
+    "zlib-sync": "^0.1.9"
+  },
+  "devDependencies": {
+    "eslint": "^9.8.0"
+  }
+}
