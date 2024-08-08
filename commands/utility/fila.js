@@ -8,7 +8,7 @@ module.exports = {
         await interaction.deferReply();
             
         if (interaction.client.isPlaying && interaction.client.queue.size <= 0) {
-            await interaction.editReply('Tocando agora: ');
+            return interaction.editReply(`Tocando agora: ${interaction.client.currentSong.title}`);
         }
 
         const queue = [];

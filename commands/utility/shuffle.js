@@ -11,20 +11,21 @@ module.exports = {
             return interaction.reply('É preciso estar em um canal de voz para usar esse comando');
         }
 
-        if (interaction.client.size <= 1) {
+        if (interaction.client.queue.size <= 1) {
             return interaction.reply('Não há músicas suficientes na fila');
         }
 
-        const queue = [];
+        let queue = [];
         for (const song of interaction.client.queue) {
             queue.push(song);
         }
 
-        for (const i = 0; i <= queue.length - 2; i++) {
-            const j = getRandomInt(i, queue.length);
-            const temp = queue[i];
-            queue[i] = queue[j];
-            queue[j] = temp;
+        await shuffle(queue);
+        
+        interaction.client.queue.clear();
+
+        for (const song of queue) {
+            interaction.client.queue.enqueue(song);
         }
 
         return interaction.reply('A fila foi randomizada com sucesso');
@@ -32,6 +33,16 @@ module.exports = {
 
 }
 
-function getRandomInt(min, max) {
-    return Math.random() * (max - min) + min;
+async function shuffle(array) {
+	for (let i = array.length - 1; i >= 1; i--) {
+		const j = randomInt(0, i + 1);
+		[array[j], array[i]] = [array[i], array[j]];
+	}
+	return array;
+}
+
+function randomInt(min, max) {
+	min = Math.ceil(min);
+	max = Math.floor(max);
+	return Math.floor(Math.random() * (max - min) + min);
 }

@@ -12,6 +12,7 @@ client.isPlaying = false;
 client.connection = null;
 client.timeoutId = null;
 client.currentSong = null;
+client.guildId = null;
 
 // Registro de comandos
 client.commands = new Collection();

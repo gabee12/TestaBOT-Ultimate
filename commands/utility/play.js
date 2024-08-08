@@ -81,8 +81,9 @@ module.exports = {
                 const connection = joinVoiceChannel({
                     adapterCreator: voiceChannel.guild.voiceAdapterCreator,
                     channelId: voiceChannel.id,
-                    guildId: voiceChannel.guild.id,
+                    guildId: interaction.guild.id,
                 });
+                interaction.client.guildId = interaction.guild.id;
                 interaction.client.connection = connection;
                 await player(interaction.client, interaction.channel);
                 interaction.client.isPlaying = true;
@@ -98,11 +99,12 @@ module.exports = {
 }
 
 async function player(client, channel) {
-    if (client.queue.size <= 0) {
+    if (client.queue.size <= 0 && client.guildId != null) {
         client.isPlaying = false;
         client.timeoutId = setTimeout(() => {
-            const connection = getVoiceConnection(client.connection.guildId);
-            connection.destroy();
+            audioPlayer.stop;
+            getVoiceConnection(client.guildId).destroy();
+            interaction.client.currentSong = null;
             client.connection = null;
             client.isPlaying = false;
         }, 15 * 60 * 1000);
@@ -113,7 +115,8 @@ async function player(client, channel) {
 
     try {
         client.connection.subscribe(audioPlayer);
-        const stream = await ytdl(nextSong.url, { agent: agent });
+        client.player = audioPlayer;
+        const stream = await ytdl(nextSong.url, { agent: agent, highWaterMark: 1 << 62, liveBuffer: 1 << 62 });
         
         const resource = createAudioResource(stream, { inputType: StreamType.Opus});
 
