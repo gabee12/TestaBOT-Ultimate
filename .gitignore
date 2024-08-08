@@ -1,3 +1,4 @@
 config.json
 node_modules
 cookie.json
+yarn.lock
