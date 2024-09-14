@@ -5,9 +5,7 @@ const ytpl = require('@distube/ytpl');
 const ytsr = require('@distube/ytsr');
 const fs = require('fs');
 
-
 const audioPlayer = createAudioPlayer({ behaviors: { noSubscriber: "pause" } });
-const agent = ytdl.createAgent(JSON.parse(fs.readFileSync('./cookie.json')));
 
 module.exports = {
     data: new SlashCommandBuilder()
