@@ -1,9 +1,8 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { joinVoiceChannel, getVoiceConnection, createAudioPlayer, NoSubscriberBehavior, createAudioResource, StreamType } = require('@discordjs/voice');
+const { joinVoiceChannel, getVoiceConnection, createAudioPlayer, createAudioResource, StreamType } = require('@discordjs/voice');
 const ytdl = require('ytdl-core-discord');
 const ytpl = require('@distube/ytpl');
 const ytsr = require('@distube/ytsr');
-const fs = require('fs');
 
 const audioPlayer = createAudioPlayer({ behaviors: { noSubscriber: "pause" } });
 
@@ -45,8 +44,8 @@ module.exports = {
     
                 await interaction.reply(`${playlist.total_items} músicas adicionadas a fila!`);
             } 
-            else if (ytdl.validateURL(link)) {
-                const videoInfo = await ytdl.getInfo(link, { agent: agent });
+            else if (validateURL(link)) {
+                const videoInfo = await ytdl.getBasicInfo(link);
                 const song = {
                     url: link,
                     title: videoInfo.videoDetails.title,
@@ -115,7 +114,7 @@ async function player(client, channel) {
     try {
         client.connection.subscribe(audioPlayer);
         client.player = audioPlayer;
-        const stream = await ytdl(nextSong.url, { agent: agent, highWaterMark: 1 << 62, liveBuffer: 1 << 62 });
+        const stream = await ytdl(nextSong.url, { highWaterMark: 1 << 62, liveBuffer: 1 << 62 });
         
         const resource = createAudioResource(stream, { inputType: StreamType.Opus});
 
@@ -138,5 +137,35 @@ async function player(client, channel) {
         client.isPlaying = false;
         client.queue.clear();
         return;
+    }
+}
+
+function getURLVideoID(link) {
+    const PARSED = new URL(link.trim());
+    let id = PARSED.searchParams.get('v');
+    if (VALID_PATH_DOMAINS.test(link.trim()) && !id) {
+        const PATHS = PARSED.pathname.split('/');
+        id = PARSED.host === 'youtu.be' ? PATHS[1] : PATHS[2];
+    }
+    else if (PARSED.hostname && !VALID_QUERY_DOMAINS.has(PARSED.hostname)) {
+        throw new Error('Not a YouTube domain');
+    }
+    if (!id) {
+        throw new Error(`No video id found: "${link}"`);
+    }
+    id = id.substring(0, 11);
+    if (!this.validateID(id)) {
+        throw new TypeError(`Video id (${id}) does not match expected format (${ID_REGEX.toString()})`);
+    }
+    return id;
+}
+
+function validateURL(url) {
+    try {
+        this.getURLVideoID(str);
+        return true;
+    }
+    catch (e) {
+        return false;
     }
 }
